@@ -5,7 +5,7 @@ namespace TicTacToe
     class Game
     {
         private IConsole _console;
-        SquareState _currentPlayer = SquareState.Nought;
+        SquareState _currentPlayer = SquareState.Cross;
         Board _board;
         int _numMoves = 0;
 
@@ -18,47 +18,46 @@ namespace TicTacToe
         public void Play()
         {
             _board.Print(true);
-            _console.Print($"\nNoughts and Crosses!\nPlayer: {_currentPlayer}\ntype the corresponding number...\n");
+            _console.Print($"\nNoughts and Crosses!\nType the corresponding number...\n");
+
             while (true)
             {
-                bool success = false;
-                while (!success)
+                bool winner = _board.CheckForWinner(_currentPlayer);
+                if (winner || _numMoves > 8)
                 {
-                    if (_numMoves > 8)
-                    {
-                        _console.Print("No Winner!");
-                        if (!HandlePlayAgain())
-                        {
-                            return;
-                        }
-                        Reset();
-                        continue;
-                    }
-                    int selection = _console.GetInt() - 1;
-                    try
-                    {
-                        _board.PickSquare(_currentPlayer, selection);
-                        success = true;
-                    }
-                    catch (Exception error)
-                    {
-                        _console.Print(error.Message);
-                    }
-                }
-                _board.Print(false);
-                var winner = _board.CheckForWinner(_currentPlayer);
-
-                if (winner)
-                {
-                    _console.Print("You Win!");
+                    _console.Print(winner ? "You Win!" : "No Winner!");
                     if (!HandlePlayAgain())
                     {
+                        _console.Print("Thanks for playing!");
                         return;
                     };
                     Reset();
                     continue;
                 }
+
                 NextPlayer();
+
+                bool moveSuccess = false;
+                while (!moveSuccess)
+                {
+                    moveSuccess = HandleMove();
+                }
+                _board.Print(false);
+            }
+        }
+
+        bool HandleMove()
+        {
+            int selection = _console.GetInt() - 1;
+            try
+            {
+                _board.PickSquare(_currentPlayer, selection);
+                return true;
+            }
+            catch (Exception error)
+            {
+                _console.Print(error.Message);
+                return false;
             }
         }
 
@@ -83,12 +82,12 @@ namespace TicTacToe
             _board = new Board(_console);
             _numMoves = 0;
             _board.Print(true);
-            _console.Print($"Your move: {_currentPlayer}");
+            _currentPlayer = SquareState.Cross;
         }
 
         void NextPlayer()
         {
-            _currentPlayer = _currentPlayer == SquareState.Cross ? SquareState.Nought : SquareState.Cross;
+            _currentPlayer = _currentPlayer != SquareState.Nought ? SquareState.Nought : SquareState.Cross;
             _console.Print($"Your move: {_currentPlayer}");
             _numMoves++;
         }

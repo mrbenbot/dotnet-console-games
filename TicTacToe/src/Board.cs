@@ -61,7 +61,7 @@ namespace TicTacToe
                 sb.Append(showNumbers ? (i + 1).ToString() : _squares[i].ToString());
                 sb.Append("|");
             }
-            sb.Append("\n\n");
+            sb.Append("\n");
             _console.Clear();
             _console.Print(sb.ToString());
         }
