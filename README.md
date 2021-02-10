@@ -1,6 +1,6 @@
 # Dotnet Console Games
 
-A collection of console games for practicing C#.
+A collection of console games built to practice C#.
 
 ## Games
 
