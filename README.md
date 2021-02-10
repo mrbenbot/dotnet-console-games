@@ -2,7 +2,7 @@
 
 A collection of console games for practicing C#.
 
-## Games
+## Games
 
 - [x] Tic Tac Toe
 - [ ] Memory Game
